@@ -12,3 +12,6 @@ The Robot arm in a unity simulation with a moveit2 planning pipeline in ROS2 hum
 
 ### Pending
 * Moveit2 integration - will use defaults from UR5e packages.
+```bash
+xacro /opt/ros/$ROS_DISTRO/share/ur_description/urdf/ur.urdf.xacro name:=ur5e ur_type:=ur5e > ur5e.urdf
+```

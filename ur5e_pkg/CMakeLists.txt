@@ -28,4 +28,9 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(PROGRAMS
+  scripts/move_home.sh
+  scripts/move_ready.sh
+  DESTINATION lib/${PROJECT_NAME}
+)
 ament_package()
