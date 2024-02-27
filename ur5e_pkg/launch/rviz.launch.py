@@ -5,15 +5,17 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import PathJoinSubstitution, FindExecutable, Command
 from launch.conditions import UnlessCondition
+import os
+from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    pkg_turtlebot4_description = FindPackageShare('turtlebot4_description')
-    xacro_file = PathJoinSubstitution([pkg_turtlebot4_description,
-                                       'urdf','lite', 'turtlebot4.urdf.xacro'])
     
     is_unity_arg = DeclareLaunchArgument("with_unity", default_value="True")
     is_unity = LaunchConfiguration("with_unity")
-
+    
+    with open(os.path.join(get_package_share_directory('ur5e_pkg'),'urdf','ur5e.urdf'), 'r') as infp:
+        robot_desc = infp.read()
+    
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -21,15 +23,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': PythonExpression(["True if ", is_unity, " else False"])},
-            {'robot_description': Command(
-                [
-                    PathJoinSubstitution([FindExecutable(name="xacro")]),
-                    " ",
-                    PathJoinSubstitution([FindPackageShare('ur_description'), "urdf", 'ur.urdf.xacro']),
-                    " ",
-                    "name:=","ur5e"," ","ur_type:=","ur5e"
-                ])
-            },
+            {'robot_description': robot_desc}
         ],
         remappings=[
             ('/tf', 'tf'),

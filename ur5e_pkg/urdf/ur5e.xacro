@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ur5e">
+
+<xacro:arg name="name" default="ur5e"/>
+<xacro:arg name="ur_type" default="ur5e"/>
+
+<xacro:include filename="$(find ur_description)/urdf/ur.urdf.xacro">
+</xacro:include>
+
+</robot>
