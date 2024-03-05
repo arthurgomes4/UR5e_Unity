@@ -15,7 +15,6 @@ def generate_launch_description():
 
     # Launch the ros_tcp_endpoint node
     ros_tcp_endpoint_node = Node(
-        name='tcp_endpoint',
         package='ros_tcp_endpoint',
         executable='default_server_endpoint',
         output='screen',
@@ -29,8 +28,28 @@ def generate_launch_description():
         ]
     )
 
+    # robot state pub for TF
+    with open(os.path.join(get_package_share_directory('ur5e_pkg'),'urdf','ur5e.urdf'), 'r') as infp:
+        robot_desc = infp.read()
+    
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[
+            {'use_sim_time': True},
+            {'robot_description': robot_desc}
+        ],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
+    )
+
     return LaunchDescription([
         ip_arg,
         port_arg,
-        ros_tcp_endpoint_node
+        ros_tcp_endpoint_node,
+        robot_state_publisher
     ])

@@ -28,7 +28,8 @@ def generate_launch_description():
         remappings=[
             ('/tf', 'tf'),
             ('/tf_static', 'tf_static')
-        ]
+        ],
+        condition=UnlessCondition(is_unity)
     )
 
     joint_state_publisher_gui_node = Node(

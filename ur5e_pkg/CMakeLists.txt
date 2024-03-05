@@ -24,13 +24,16 @@ if(BUILD_TESTING)
 endif()
 
 install(DIRECTORY
-  rviz launch urdf
+  rviz launch urdf config
   DESTINATION share/${PROJECT_NAME}
 )
 
 install(PROGRAMS
-  scripts/move_home.sh
-  scripts/move_ready.sh
+  scripts/command_node.py
+  scripts/move_home.py
+  scripts/move_ready.py
+  scripts/traj_home.py
+  scripts/traj_ready.py
   DESTINATION lib/${PROJECT_NAME}
 )
 ament_package()

@@ -591,9 +591,8 @@ GameObject:
   m_Component:
   - component: {fileID: 107838683}
   - component: {fileID: 107838682}
-  - component: {fileID: 107838686}
-  - component: {fileID: 107838685}
   - component: {fileID: 107838684}
+  - component: {fileID: 107838685}
   m_Layer: 0
   m_Name: ur5e
   m_TagString: robot
@@ -656,27 +655,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 107838681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37d4f1bda7437d32c9f76722f952c06a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TopicName: /joint_command
-  Joints:
-  - {fileID: 861098749}
-  - {fileID: 1681208437}
-  - {fileID: 651788244}
-  - {fileID: 47343711}
-  - {fileID: 1667869788}
-  - {fileID: 1086966549}
---- !u!114 &107838686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 107838681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb6c5944ede7c53edb78b9a91e093d45, type: 3}
+  m_Script: {fileID: 11500000, guid: 57788be69a9b4415aba73dec8f92bc47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Joints:
@@ -686,8 +665,9 @@ MonoBehaviour:
   - {fileID: 47343711}
   - {fileID: 1667869788}
   - {fileID: 1086966549}
-  TopicName: /joint_states
-  PublishMessageFrequency: 10
+  jointStatesTopic: /joint_states
+  jointCommandsTopic: /joint_command
+  frequency: 20
 --- !u!1 &107989314
 GameObject:
   m_ObjectHideFlags: 8
