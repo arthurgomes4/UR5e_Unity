@@ -1,17 +1,67 @@
 # UR5e_Unity
-The UR5e arm in unity simulation interfaced with ROS2 humble
 
-### Aim
-The Robot arm in a unity simulation with a moveit2 planning pipeline in ROS2 humble.
+This project demonstrates using **Unity Simulation Engine** and **Moveit2** motion planning framework with **ROS2 Humble** for the middleware communication. It features a 6-dof **Universal Robots UR5e**. Later sections also describe the project working and outline a general process for getting any robot Arm working in a Unity Simulation with moveit.
 
-### Completed
-* RViz visualization and TCP connection
+## Quick Start
 
-### Underway
-* Unity Project - testing underway, no unknowns
+### Install Prerequisites
+* The project requires an installation of ROS2 Humble to work, although it should work on other ROS2 distros just as well. [Install humble](https://docs.ros.org/en/humble/Installation.html) if not installed already. 
+* Install the [Unityhub](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux), once installed, install editor version: `2022.3.1711` or newer. (older versions may also work, but no guarantees given).
+* Install git. Most users will have git preinstalled but if not then install from [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-### Pending
-* Moveit2 integration - will use defaults from UR5e packages.
+### Clone and Build workspace
+These instructions are for Linux:
+
+Create a ROS2 workspace, clone the repo and install dependencies with the following commands:
 ```bash
-xacro /opt/ros/$ROS_DISTRO/share/ur_description/urdf/ur.urdf.xacro name:=ur5e ur_type:=ur5e > ur5e.urdf
+mkdir -p ros2_ws/src
+
+cd ros2_ws/src
+
+git clone git@github.com:arthurgomes4/UR5e_Unity.git
+git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git -b main-ros2
+
+cd .. && rosdep install --from-paths src --ignore-src -r -y
 ```
+
+Build the packages with:
+```bash
+colcon build
+```
+
+### Open Unity Project
+Open the Unity Hub and add the [ur5e_project](./ur5e_project/). Open the project and ensure there are no compile errors.
+Once the unity scene is open press the play  button to start the simulation.
+
+### Run ROS nodes
+source your workspace and run the ROS nodes with the following commands:
+```bash
+source install/setup.bash
+
+ros2 launch ur5e_pkg system.launch.py
+```
+
+## Project Technical Description
+
+There are a few key areas of interest in this project. This section provides an explanation for the working of the project and the components used. Refer to the above figure when reading these points, they are numbered in sync with the image. 
+
+1. **Unity Simulation**: Similar to the ROS1/2 plugins in gazebo classic/sim, interacting with your simulated robot model requires C# scripts to be written to communicate with the ROS side using a [TCP based API](https://github.com/Unity-Technologies/ROS-TCP-Connector) provided by Unity.
+
+2. **TCP Endpoint**: These nodes form the other side of the Unity-ROS connection. They are provided by the [ros_tcp_endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint) package. There exists one main server node and child nodes that are created dynamically during runtime for every incoming/outgoing topic connection.
+
+3. **ROS2 Control**: [ROS2 control](https://control.ros.org/master/index.html) is a convenient method of deploying and managing controllers. It uses hardware interfaces to communicate with the robot either in simulation or in real-life. The exact functioning of ROS1/2 control may be different but the general gist of it is: A hardware interface is a class that is loaded at runtime by the controller manager and contains functions for reading robot state and writing commands. These functions are then used by [any selected controller](https://github.com/ros-controls/ros2_controllers) to provide a topic/action interface to control/read from the robot. In the case of this project, this hardware interface is provided by [ROS2 topic based control](https://github.com/PickNikRobotics/topic_based_ros2_control) and a [Unity script](./ur5e_project/Assets/Scripts/ROSTopicBasedControlPlugin.cs).
+
+4. **Moveit2** (and other nodes):
+[Moveit2](https://www.google.com/search?channel=fs&client=ubuntu-sn&q=moveit2) is a set of motion planning libraries, tools and packages that will provide motion planning. The move_group node is the executable that provides the ROS interfaces to receive commands and issue trajectories to the controller being used. The other nodes are:
+    * robot state publisher: uses the robots joint states to produce a TF tree of the robot to reflect the changes in the robots kinematic chain.
+    * Rviz: provides visualization and graphical control interface for moveit2.
+
+## Guidelines for setting up with new robot
+
+The setup for a new robot is relatively straightforward:
+
+1. Set up your robot model in Unity. This step is a bit lengthy and will not be discussed in this readme, there is material available online to follow. For any doubts reach out to the [author](https://www.linkedin.com/in/arthur-francis-gomes/).
+
+2. Use the ROS2 topic based control scheme mentioned above while taking inspiration from [control.launch.py](./ur5e_pkg/launch/control.launch.py) and [endpoint.launch.py](./ur5e_pkg/launch/endpoint.launch.py).
+
+3. Create up your robots moveit config pkg using moveit setup assistant. Refer to [moveit.launch.py](./ur5e_pkg/launch/moveit.launch.py).  
