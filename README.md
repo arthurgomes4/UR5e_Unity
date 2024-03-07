@@ -2,6 +2,8 @@
 
 This project demonstrates using **Unity Simulation Engine** and **Moveit2** motion planning framework with **ROS2 Humble** for the middleware communication. It features a 6-dof **Universal Robots UR5e**. Later sections also describe the project working and outline a general process for getting any robot Arm working in a Unity Simulation with moveit.
 
+https://github.com/arthurgomes4/UR5e_Unity/assets/55613848/5aa093a9-2fa8-4bdb-91b4-bf910719bcf9
+
 ## Quick Start
 
 ### Install Prerequisites
@@ -42,6 +44,7 @@ ros2 launch ur5e_pkg system.launch.py
 ```
 
 ## Project Technical Description
+![ur5e_unity](https://github.com/arthurgomes4/UR5e_Unity/assets/55613848/b67b212a-307d-48ba-8697-6abc5bfd2fff)
 
 There are a few key areas of interest in this project. This section provides an explanation for the working of the project and the components used. Refer to the above figure when reading these points, they are numbered in sync with the image. 
 
