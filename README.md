@@ -7,36 +7,52 @@ https://github.com/arthurgomes4/UR5e_Unity/assets/55613848/5aa093a9-2fa8-4bdb-91
 ## Quick Start
 
 ### Install Prerequisites
-* The project requires an installation of ROS2 Humble to work, although it should work on other ROS2 distros just as well. [Install humble](https://docs.ros.org/en/humble/Installation.html) if not installed already. 
+This project can be used with either docker or a native ROS2 humble installation. Unity needs to be installed natively in both cases.
 * Install the [Unityhub](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux), once installed, install editor version: `2022.3.1711` or newer. (older versions may also work, but no guarantees given).
 * Install git. Most users will have git preinstalled but if not then install from [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-### Clone and Build workspace
+* **If using docker**: Install [docker engine](https://docs.docker.com/engine/install/ubuntu/) and perform [post-install steps](https://docs.docker.com/engine/install/linux-postinstall/). (recommended way).
+* **If using ROS2 natively**: The project requires an installation of ROS2 Humble to work, although it should work on other ROS2 distros just as well. [Install humble](https://docs.ros.org/en/humble/Installation.html) if not installed already.
+
+### Cloning, installing dependencies and building workspace
 These instructions are for Linux:
 
-Create a ROS2 workspace, clone the repo and install dependencies with the following commands:
+**docker users**: Clone the repository an build the docker image with:
+```bash
+git https://github.com/arthurgomes4/UR5e_Unity.git # -b <name> if using any branch
+
+cd UR5e_Unity && ./use_docker.sh --build # build the image
+```
+
+**Native ROS2 users**: Create a ROS2 workspace, clone the repo and install dependencies with the following commands:
 ```bash
 mkdir -p ros2_ws/src
 
 cd ros2_ws/src
 
-git clone git@github.com:arthurgomes4/UR5e_Unity.git
+git clone https://github.com/arthurgomes4/UR5e_Unity.git
 git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git -b main-ros2
 
-cd .. && rosdep install --from-paths src --ignore-src -r -y
-```
+sudo ./UR5e_Unity/install_dependencies.sh # root required
 
-Build the packages with:
-```bash
-colcon build
+cd .. && colcon build
 ```
 
 ### Open Unity Project
-Open the Unity Hub and add the [ur5e_project](./ur5e_project/). Open the project and ensure there are no compile errors.
-Once the unity scene is open press the play  button to start the simulation.
+Open the Unity Hub and add the [ur5e_project](./ur5e_project/). Open the project and ensure there are no compile errors. Open the [SampleScene.unity](./ur5e_project/Assets/Scenes/SampleScene.unity) and press the play button to start the simulation.
 
 ### Run ROS nodes
-source your workspace and run the ROS nodes with the following commands:
+
+**docker users**: Run the container and enter the container with the [use_docker.sh](./use_docker.sh).
+```bash
+./use_docker.sh --run
+
+./use_docker.sh --enter
+
+ros2 launch ur5e_pkg system.launch.py # inside the container
+```
+
+**Native ROS2 users**: Source your workspace and run the ROS nodes with the following commands:
 ```bash
 source install/setup.bash
 

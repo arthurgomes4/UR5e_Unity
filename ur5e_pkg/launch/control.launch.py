@@ -41,6 +41,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         ros2_control_node,
-        joint_state_broadcaster_spawner,
+        # joint_state_broadcaster_spawner, # /joint_states published by unity-endpoint already.
         joint_trajectory_controller_spawner
     ])
